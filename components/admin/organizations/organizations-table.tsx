@@ -743,9 +743,9 @@ export function OrganizationsTable(): React.JSX.Element {
 								<DropdownMenuItem
 									onClick={() => {
 										NiceModal.show(ConfirmationModal, {
-											title: "Delete workspace",
+											title: "Delete organization",
 											message:
-												"Are you sure you want to delete this workspace? This action cannot be undone.",
+												"Are you sure you want to delete this organization? This action cannot be undone.",
 											confirmLabel: "Delete",
 											destructive: true,
 											onConfirm: async () => {
@@ -835,7 +835,7 @@ export function OrganizationsTable(): React.JSX.Element {
 			columns={columns}
 			data={data?.organizations || []}
 			defaultSorting={DEFAULT_SORTING}
-			emptyMessage="No workspace found."
+			emptyMessage="No organization found."
 			enableFilters
 			enablePagination
 			enableRowSelection

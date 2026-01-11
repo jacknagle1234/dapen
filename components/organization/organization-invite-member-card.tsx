@@ -52,7 +52,11 @@ export function OrganizationInviteMemberCard(): React.JSX.Element {
 
 			if (error) {
 				if (error.code === "USER_IS_ALREADY_INVITED_TO_THIS_ORGANIZATION") {
-					toast.error("User is already invited to this workspace.");
+					toast.error("User is already invited to this organization.");
+					return;
+				}
+				if (error.code === "USER_IS_ALREADY_A_MEMBER_OF_THIS_ORGANIZATION") {
+					toast.error("User is already a member of this organization.");
 					return;
 				}
 				// Check for member limit errors - the code is dynamically generated from the message
