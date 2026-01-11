@@ -131,7 +131,7 @@ export function OrganizationLogoCard(): React.JSX.Element | null {
 				<div className="flex flex-row items-center gap-4">
 					<div
 						className={cn(
-							"relative size-20 rounded-md transition-colors",
+							"relative size-20 rounded-md transition-colors shrink-0",
 							!organization?.logo &&
 								"cursor-pointer border border-border hover:border-primary",
 						)}

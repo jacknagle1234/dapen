@@ -113,7 +113,7 @@ export function UserAvatarUpload({
 			<div className="flex flex-row items-center gap-4">
 				<div
 					className={cn(
-						"relative size-20 rounded-full transition-colors",
+						"relative size-20 rounded-full transition-colors shrink-0",
 						!user?.image &&
 							"cursor-pointer border border-border hover:border-primary",
 					)}
