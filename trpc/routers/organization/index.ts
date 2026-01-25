@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { asc, eq, getTableColumns } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { headers } from "next/headers";
+import { appConfig } from "@/config/app.config";
 import { auth } from "@/lib/auth";
 import { assertUserIsOrgMember } from "@/lib/auth/server";
 import { db, memberTable, organizationTable } from "@/lib/db";
@@ -87,7 +88,19 @@ export const organizationRouter = createTRPCRouter({
 		}),
 	create: protectedProcedure
 		.input(createOrganizationSchema)
-		.mutation(async ({ input }) => {
+		.mutation(async ({ ctx, input }) => {
+			// Check if organization creation is allowed for non-admin users
+			if (
+				!appConfig.organizations.allowUserCreation &&
+				ctx.user.role !== "admin"
+			) {
+				throw new TRPCError({
+					code: "FORBIDDEN",
+					message:
+						"Organization creation is disabled. Contact an administrator.",
+				});
+			}
+
 			const organization = await auth.api.createOrganization({
 				headers: await headers(),
 				body: {
