@@ -92,7 +92,6 @@ export default async function OrganizationInvitationPage({
 				invitationId={invitationId}
 				logoUrl={organization?.logo || undefined}
 				organizationName={invitation.organizationName}
-				organizationSlug={invitation.organizationSlug}
 			/>
 			<ThemeToggle className="fixed right-2 bottom-2 rounded-full" />
 		</>

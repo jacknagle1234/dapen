@@ -19,14 +19,12 @@ import { trpc } from "@/trpc/client";
 export type OrganizationInvitationModalProps = {
 	invitationId: string;
 	organizationName: string;
-	organizationSlug: string;
 	logoUrl?: string;
 };
 
 export function OrganizationInvitationCard({
 	invitationId,
 	organizationName,
-	organizationSlug,
 	logoUrl,
 }: OrganizationInvitationModalProps): React.JSX.Element {
 	const router = useProgressRouter();
