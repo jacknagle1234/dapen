@@ -1,7 +1,6 @@
 "use client";
 
 import NiceModal from "@ebay/nice-modal-react";
-import type { Table } from "@tanstack/react-table";
 import type * as React from "react";
 import { toast } from "sonner";
 import {
@@ -11,17 +10,18 @@ import {
 import {
 	type BulkActionItem,
 	DataTableBulkActions,
+	getSelectedRowIds,
 } from "@/components/ui/custom/data-table";
 import { downloadCsv, downloadExcel } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
 
-export type UserBulkActionsProps<T> = {
-	table: Table<T>;
+export type UserBulkActionsProps = {
+	rowSelection: Record<string, boolean>;
 };
 
-export function UserBulkActions<T extends { id: string }>({
-	table,
-}: UserBulkActionsProps<T>): React.JSX.Element {
+export function UserBulkActions({
+	rowSelection,
+}: UserBulkActionsProps): React.JSX.Element {
 	const exportCsv = trpc.admin.user.exportSelectedToCsv.useMutation();
 	const exportExcel = trpc.admin.user.exportSelectedToExcel.useMutation();
 
@@ -39,12 +39,11 @@ export function UserBulkActions<T extends { id: string }>({
 	};
 
 	const handleExportSelectedToCsv = async (delimiter: DelimiterType) => {
-		const selectedRows = table.getSelectedRowModel().rows;
-		if (selectedRows.length === 0) {
+		const userIds = getSelectedRowIds(rowSelection);
+		if (userIds.length === 0) {
 			toast.error("No users selected.");
 			return;
 		}
-		const userIds = selectedRows.map((row) => row.original.id);
 		try {
 			const csv = await exportCsv.mutateAsync({ userIds });
 			const delimiterChar = getDelimiterChar(delimiter);
@@ -58,12 +57,11 @@ export function UserBulkActions<T extends { id: string }>({
 	};
 
 	const handleExportSelectedToExcel = async () => {
-		const selectedRows = table.getSelectedRowModel().rows;
-		if (selectedRows.length === 0) {
+		const userIds = getSelectedRowIds(rowSelection);
+		if (userIds.length === 0) {
 			toast.error("No users selected.");
 			return;
 		}
-		const userIds = selectedRows.map((row) => row.original.id);
 		try {
 			const base64 = await exportExcel.mutateAsync({ userIds });
 			downloadExcel(base64, "users.xlsx");
@@ -88,5 +86,5 @@ export function UserBulkActions<T extends { id: string }>({
 		},
 	];
 
-	return <DataTableBulkActions table={table} actions={actions} />;
+	return <DataTableBulkActions actions={actions} rowSelection={rowSelection} />;
 }

@@ -115,12 +115,12 @@ export interface DataTableProps<TData> {
 	emptyMessage?: string;
 	className?: string;
 	toolbarActions?: React.ReactNode;
-	renderBulkActions?: (
-		table: ReturnType<typeof useReactTable<TData>>,
-	) => React.ReactNode;
+	renderBulkActions?: () => React.ReactNode;
 	loading?: boolean;
 	onRowClick?: (data: TData, event: React.MouseEvent) => void;
 	getExpandedContent?: (row: any) => React.ReactNode;
+	/** Custom function to derive row ID from row data. Required for proper multi-page selection. */
+	getRowId?: (originalRow: TData, index: number, parent?: any) => string;
 }
 
 function DataTableSkeletonRows(columnCount: number, rowCount = 5) {
@@ -165,9 +165,12 @@ export function DataTable<TData>({
 	loading = false,
 	onRowClick,
 	getExpandedContent,
+	getRowId,
 }: DataTableProps<TData>) {
 	const [mounted, setMounted] = React.useState(false);
-	const [internalRowSelection, setInternalRowSelection] = React.useState({});
+	const [internalRowSelection, setInternalRowSelection] = React.useState<
+		Record<string, boolean>
+	>({});
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
 	const [internalColumnFilters, setInternalColumnFilters] =
@@ -201,6 +204,7 @@ export function DataTable<TData>({
 	const table = useReactTable({
 		data,
 		columns,
+		getRowId,
 		state: {
 			sorting: currentSorting,
 			columnVisibility,
@@ -293,7 +297,7 @@ export function DataTable<TData>({
 	return (
 		<div className={cn("flex flex-col gap-4", className)}>
 			{/* Bulk Actions - Floating bar at bottom (positioned via CSS) */}
-			{typeof renderBulkActions === "function" && renderBulkActions(table)}
+			{typeof renderBulkActions === "function" && renderBulkActions()}
 
 			{/* Toolbar */}
 			{(enableFilters || enableSearch || toolbarActions) && (
@@ -407,7 +411,7 @@ export function DataTable<TData>({
 			{enablePagination && (
 				<div className="flex items-center justify-between px-4">
 					<div className="hidden flex-1 text-muted-foreground text-sm lg:flex">
-						{table.getFilteredSelectedRowModel().rows.length} of {totalCount}{" "}
+						{getSelectedRowIds(currentRowSelection).length} of {totalCount}{" "}
 						row(s) selected.
 					</div>
 					<div className="flex w-full items-center gap-8 lg:w-fit">
@@ -528,18 +532,25 @@ export interface BulkActionItem {
 	actions?: BulkActionItem[];
 }
 
-export interface DataTableBulkActionsProps<TData> {
-	table: ReturnType<typeof useReactTable<TData>>;
-	actions: BulkActionItem[];
-	className?: string;
+/** Get all selected row IDs from rowSelection state (works across pages) */
+export function getSelectedRowIds(
+	rowSelection: Record<string, boolean>,
+): string[] {
+	return Object.keys(rowSelection).filter((key) => rowSelection[key]);
 }
 
-export function DataTableBulkActions<TData>({
-	table,
+export interface DataTableBulkActionsProps {
+	actions: BulkActionItem[];
+	className?: string;
+	rowSelection: Record<string, boolean>;
+}
+
+export function DataTableBulkActions({
 	actions,
 	className,
-}: DataTableBulkActionsProps<TData>) {
-	const selectedCount = table.getSelectedRowModel().rows.length;
+	rowSelection,
+}: DataTableBulkActionsProps) {
+	const selectedCount = getSelectedRowIds(rowSelection).length;
 
 	if (selectedCount === 0) {
 		return null;

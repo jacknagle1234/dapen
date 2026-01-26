@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "@/components/user/user-avatar";
 import { appConfig } from "@/config/app.config";
+import { useTableSelection } from "@/hooks/use-table-selection";
 import { LeadSources, LeadStatuses } from "@/lib/db/schema/enums";
 import { capitalize, cn } from "@/lib/utils";
 import { LeadSortField } from "@/schemas/organization-lead-schemas";
@@ -90,8 +91,6 @@ const sourceLabels: Record<string, string> = {
 };
 
 export function LeadsTable(): React.JSX.Element {
-	const [rowSelection, setRowSelection] = React.useState({});
-
 	const [searchQuery, setSearchQuery] = useQueryState(
 		"query",
 		parseAsString.withDefault("").withOptions({
@@ -244,9 +243,18 @@ export function LeadsTable(): React.JSX.Element {
 		},
 	);
 
+	const { rowSelection, setRowSelection, clearSelection, removeFromSelection } =
+		useTableSelection({
+			total: data?.total,
+			pageIndex,
+			pageSize,
+			setPageIndex,
+		});
+
 	const deleteLeadMutation = trpc.organization.lead.delete.useMutation({
-		onSuccess: () => {
+		onSuccess: (_data, variables) => {
 			toast.success("Lead deleted successfully");
+			removeFromSelection([variables.id]);
 			utils.organization.lead.list.invalidate();
 		},
 		onError: (error) => {
@@ -454,6 +462,7 @@ export function LeadsTable(): React.JSX.Element {
 			enableRowSelection
 			enableSearch
 			filters={leadFilters}
+			getRowId={(row) => row.id}
 			loading={isPending}
 			onFiltersChange={handleFiltersChange}
 			onPageIndexChange={setPageIndex}
@@ -463,7 +472,12 @@ export function LeadsTable(): React.JSX.Element {
 			onSortingChange={handleSortingChange}
 			pageIndex={pageIndex || 0}
 			pageSize={pageSize || appConfig.pagination.defaultLimit}
-			renderBulkActions={(table) => <LeadsBulkActions table={table} />}
+			renderBulkActions={() => (
+				<LeadsBulkActions
+					rowSelection={rowSelection}
+					onClearSelection={clearSelection}
+				/>
+			)}
 			rowSelection={rowSelection}
 			searchPlaceholder="Search leads..."
 			searchQuery={searchQuery || ""}

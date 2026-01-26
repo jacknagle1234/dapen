@@ -1,7 +1,6 @@
 "use client";
 
 import NiceModal from "@ebay/nice-modal-react";
-import type { Table } from "@tanstack/react-table";
 import type * as React from "react";
 import { toast } from "sonner";
 import { ConfirmationModal } from "@/components/confirmation-modal";
@@ -12,17 +11,20 @@ import {
 import {
 	type BulkActionItem,
 	DataTableBulkActions,
+	getSelectedRowIds,
 } from "@/components/ui/custom/data-table";
 import { downloadCsv, downloadExcel } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
 
-export type OrganizationBulkActionsProps<T> = {
-	table: Table<T>;
+export type OrganizationBulkActionsProps = {
+	rowSelection: Record<string, boolean>;
+	onClearSelection: () => void;
 };
 
-export function OrganizationBulkActions<T extends { id: string }>({
-	table,
-}: OrganizationBulkActionsProps<T>): React.JSX.Element {
+export function OrganizationBulkActions({
+	rowSelection,
+	onClearSelection,
+}: OrganizationBulkActionsProps): React.JSX.Element {
 	const exportCsv = trpc.admin.organization.exportSelectedToCsv.useMutation();
 	const exportExcel =
 		trpc.admin.organization.exportSelectedToExcel.useMutation();
@@ -43,12 +45,11 @@ export function OrganizationBulkActions<T extends { id: string }>({
 	};
 
 	const handleExportSelectedToCsv = async (delimiter: DelimiterType) => {
-		const selectedRows = table.getSelectedRowModel().rows;
-		if (selectedRows.length === 0) {
+		const organizationIds = getSelectedRowIds(rowSelection);
+		if (organizationIds.length === 0) {
 			toast.error("No organizations selected.");
 			return;
 		}
-		const organizationIds = selectedRows.map((row) => row.original.id);
 		try {
 			const csv = await exportCsv.mutateAsync({ organizationIds });
 			const delimiterChar = getDelimiterChar(delimiter);
@@ -62,12 +63,11 @@ export function OrganizationBulkActions<T extends { id: string }>({
 	};
 
 	const handleExportSelectedToExcel = async () => {
-		const selectedRows = table.getSelectedRowModel().rows;
-		if (selectedRows.length === 0) {
+		const organizationIds = getSelectedRowIds(rowSelection);
+		if (organizationIds.length === 0) {
 			toast.error("No organizations selected.");
 			return;
 		}
-		const organizationIds = selectedRows.map((row) => row.original.id);
 		try {
 			const base64 = await exportExcel.mutateAsync({ organizationIds });
 			downloadExcel(base64, "organizations.xlsx");
@@ -94,12 +94,11 @@ export function OrganizationBulkActions<T extends { id: string }>({
 			label: "Sync from Stripe",
 			variant: "default",
 			onClick: () => {
-				const selectedRows = table.getSelectedRowModel().rows;
-				if (selectedRows.length === 0) {
+				const organizationIds = getSelectedRowIds(rowSelection);
+				if (organizationIds.length === 0) {
 					toast.error("No organizations selected.");
 					return;
 				}
-				const organizationIds = selectedRows.map((row) => row.original.id);
 				NiceModal.show(ConfirmationModal, {
 					title: "Sync from Stripe",
 					message: `Sync subscriptions and credit purchases for ${organizationIds.length} organization${organizationIds.length !== 1 ? "s" : ""} from Stripe?`,
@@ -136,7 +135,7 @@ export function OrganizationBulkActions<T extends { id: string }>({
 										);
 									}
 									utils.admin.organization.list.invalidate();
-									table.resetRowSelection();
+									onClearSelection();
 								},
 								onError: (error) => {
 									toast.error(`Failed to sync: ${error.message}`);
@@ -149,5 +148,5 @@ export function OrganizationBulkActions<T extends { id: string }>({
 		},
 	];
 
-	return <DataTableBulkActions actions={actions} table={table} />;
+	return <DataTableBulkActions actions={actions} rowSelection={rowSelection} />;
 }

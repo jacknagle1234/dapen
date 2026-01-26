@@ -49,6 +49,7 @@ import {
 } from "@/components/ui/tooltip";
 import { appConfig } from "@/config/app.config";
 import { billingConfig } from "@/config/billing.config";
+import { useTableSelection } from "@/hooks/use-table-selection";
 import { SubscriptionStatus } from "@/lib/db/schema/enums";
 import { cn } from "@/lib/utils";
 import { OrganizationSortField } from "@/schemas/admin-organization-schemas";
@@ -152,8 +153,6 @@ type Organization = {
 };
 
 export function OrganizationsTable(): React.JSX.Element {
-	const [rowSelection, setRowSelection] = React.useState({});
-
 	const [searchQuery, setSearchQuery] = useQueryState(
 		"query",
 		parseAsString.withDefault("").withOptions({
@@ -391,6 +390,13 @@ export function OrganizationsTable(): React.JSX.Element {
 			placeholderData: (prev) => prev,
 		},
 	);
+
+	const { rowSelection, setRowSelection, clearSelection } = useTableSelection({
+		total: data?.total,
+		pageIndex,
+		pageSize,
+		setPageIndex,
+	});
 
 	const handleSearchQueryChange = (value: string): void => {
 		if (value !== searchQuery) {
@@ -850,7 +856,13 @@ export function OrganizationsTable(): React.JSX.Element {
 			onSortingChange={handleSortingChange}
 			pageIndex={pageIndex || 0}
 			pageSize={pageSize || appConfig.pagination.defaultLimit}
-			renderBulkActions={(table) => <OrganizationBulkActions table={table} />}
+			getRowId={(row) => row.id}
+			renderBulkActions={() => (
+				<OrganizationBulkActions
+					rowSelection={rowSelection}
+					onClearSelection={clearSelection}
+				/>
+			)}
 			rowSelection={rowSelection}
 			searchPlaceholder="Search organizations..."
 			searchQuery={searchQuery || ""}

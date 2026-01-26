@@ -1,7 +1,6 @@
 "use client";
 
 import NiceModal from "@ebay/nice-modal-react";
-import type { Table } from "@tanstack/react-table";
 import type * as React from "react";
 import { toast } from "sonner";
 import { ConfirmationModal } from "@/components/confirmation-modal";
@@ -12,14 +11,16 @@ import {
 import {
 	type BulkActionItem,
 	DataTableBulkActions,
+	getSelectedRowIds,
 } from "@/components/ui/custom/data-table";
 import type { LeadStatus } from "@/lib/db/schema/enums";
 import { LeadStatuses } from "@/lib/db/schema/enums";
 import { capitalize, downloadCsv, downloadExcel } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
 
-export type LeadsBulkActionsProps<T> = {
-	table: Table<T>;
+export type LeadsBulkActionsProps = {
+	rowSelection: Record<string, boolean>;
+	onClearSelection: () => void;
 };
 
 const statusLabels: Record<string, string> = {
@@ -32,9 +33,10 @@ const statusLabels: Record<string, string> = {
 	lost: "Lost",
 };
 
-export function LeadsBulkActions<T extends { id: string }>({
-	table,
-}: LeadsBulkActionsProps<T>): React.JSX.Element {
+export function LeadsBulkActions({
+	rowSelection,
+	onClearSelection,
+}: LeadsBulkActionsProps): React.JSX.Element {
 	const utils = trpc.useUtils();
 
 	const exportCsv = trpc.organization.lead.exportSelectedToCsv.useMutation();
@@ -58,12 +60,11 @@ export function LeadsBulkActions<T extends { id: string }>({
 	};
 
 	const handleExportSelectedToCsv = async (delimiter: DelimiterType) => {
-		const selectedRows = table.getSelectedRowModel().rows;
-		if (selectedRows.length === 0) {
+		const leadIds = getSelectedRowIds(rowSelection);
+		if (leadIds.length === 0) {
 			toast.error("No leads selected.");
 			return;
 		}
-		const leadIds = selectedRows.map((row) => row.original.id);
 		try {
 			const csv = await exportCsv.mutateAsync({ leadIds });
 			const delimiterChar = getDelimiterChar(delimiter);
@@ -77,12 +78,11 @@ export function LeadsBulkActions<T extends { id: string }>({
 	};
 
 	const handleExportSelectedToExcel = async () => {
-		const selectedRows = table.getSelectedRowModel().rows;
-		if (selectedRows.length === 0) {
+		const leadIds = getSelectedRowIds(rowSelection);
+		if (leadIds.length === 0) {
 			toast.error("No leads selected.");
 			return;
 		}
-		const leadIds = selectedRows.map((row) => row.original.id);
 		try {
 			const base64 = await exportExcel.mutateAsync({ leadIds });
 			downloadExcel(base64, "leads.xlsx");
@@ -93,25 +93,24 @@ export function LeadsBulkActions<T extends { id: string }>({
 	};
 
 	const handleBulkDelete = () => {
-		const selectedRows = table.getSelectedRowModel().rows;
-		if (selectedRows.length === 0) {
+		const ids = getSelectedRowIds(rowSelection);
+		if (ids.length === 0) {
 			toast.error("No leads selected.");
 			return;
 		}
 
 		NiceModal.show(ConfirmationModal, {
 			title: "Delete leads?",
-			message: `Are you sure you want to delete ${selectedRows.length} lead${selectedRows.length > 1 ? "s" : ""}? This action cannot be undone.`,
+			message: `Are you sure you want to delete ${ids.length} lead${ids.length > 1 ? "s" : ""}? This action cannot be undone.`,
 			confirmLabel: "Delete",
 			destructive: true,
 			onConfirm: async () => {
-				const ids = selectedRows.map((row) => row.original.id);
 				try {
 					await bulkDelete.mutateAsync({ ids });
 					toast.success(
-						`${selectedRows.length} lead${selectedRows.length > 1 ? "s" : ""} deleted.`,
+						`${ids.length} lead${ids.length > 1 ? "s" : ""} deleted.`,
 					);
-					table.resetRowSelection();
+					onClearSelection();
 					utils.organization.lead.list.invalidate();
 				} catch (_err) {
 					toast.error("Failed to delete leads.");
@@ -121,19 +120,18 @@ export function LeadsBulkActions<T extends { id: string }>({
 	};
 
 	const handleBulkUpdateStatus = async (status: LeadStatus) => {
-		const selectedRows = table.getSelectedRowModel().rows;
-		if (selectedRows.length === 0) {
+		const ids = getSelectedRowIds(rowSelection);
+		if (ids.length === 0) {
 			toast.error("No leads selected.");
 			return;
 		}
 
-		const ids = selectedRows.map((row) => row.original.id);
 		try {
 			await bulkUpdateStatus.mutateAsync({ ids, status });
 			toast.success(
-				`${selectedRows.length} lead${selectedRows.length > 1 ? "s" : ""} updated to ${statusLabels[status] || capitalize(status)}.`,
+				`${ids.length} lead${ids.length > 1 ? "s" : ""} updated to ${statusLabels[status] || capitalize(status)}.`,
 			);
-			table.resetRowSelection();
+			onClearSelection();
 			utils.organization.lead.list.invalidate();
 		} catch (_err) {
 			toast.error("Failed to update leads.");
@@ -171,5 +169,5 @@ export function LeadsBulkActions<T extends { id: string }>({
 		},
 	];
 
-	return <DataTableBulkActions table={table} actions={actions} />;
+	return <DataTableBulkActions actions={actions} rowSelection={rowSelection} />;
 }
