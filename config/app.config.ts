@@ -1,15 +1,15 @@
 import { getBaseUrl } from "@/lib/utils";
 
 export const appConfig = {
-	appName: "Acme",
-	description: `Acme's description`,
+	appName: "DAPEN.org",
+	description: `Our mission is to provide free education to help businesses improve website accessibility.`,
 	baseUrl: getBaseUrl(),
 	// Contact information (displayed on contact page)
 	contact: {
 		enabled: true,
-		email: "hello@yourdomain.com",
-		phone: "(123) 456-7890",
-		address: "123 Main St, San Francisco, CA",
+		email: "jack@dapen.org",
+		phone: "(714) 330-9452",
+		address: "San Francisco, CA",
 	},
 	// Site sections - enable/disable major parts of the site
 	site: {

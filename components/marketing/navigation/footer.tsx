@@ -2,11 +2,6 @@
 
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import {
-	GitHubIcon,
-	LinkedInIcon,
-	XIcon,
-} from "@/components/marketing/icons/social-icons";
 import { appConfig } from "@/config/app.config";
 
 // Build footer links based on config (matching original footer)
@@ -15,23 +10,23 @@ const footerLinks = [
 		group: "Product",
 		items: [
 			{ title: "Features", href: "/#features" },
-			{ title: "Pricing", href: "/pricing" },
 			{ title: "FAQ", href: "/#faq" },
 		],
 	},
 	{
 		group: "Resources",
 		items: [
+			{
+				title: "Toolbar",
+				href: "/blog/what-is-a-dapen-toolbar",
+			},
 			{ title: "Blog", href: "/blog" },
-			{ title: "Documentation", href: "/docs" },
-			{ title: "Changelog", href: "/changelog" },
 		],
 	},
 	{
 		group: "Company",
 		items: [
 			{ title: "About", href: "/about" },
-			{ title: "Careers", href: "/careers" },
 			...(appConfig.contact.enabled
 				? [{ title: "Contact", href: "/contact" }]
 				: []),
@@ -42,23 +37,19 @@ const footerLinks = [
 		items: [
 			{ title: "Privacy Policy", href: "/legal/privacy" },
 			{ title: "Terms of Service", href: "/legal/terms" },
-			{ title: "Cookie Policy", href: "/legal/cookies" },
 		],
 	},
 ];
 
-const socialLinks = [
-	{ name: "X", href: "https://twitter.com", icon: XIcon },
-	{ name: "GitHub", href: "https://github.com", icon: GitHubIcon },
-	{ name: "LinkedIn", href: "https://linkedin.com", icon: LinkedInIcon },
-];
-
 function AppInfo() {
 	return (
-		<div className="flex max-w-sm flex-col gap-2">
-			<Logo withLabel={true} className="text-marketing-fg" />
+		<div className="flex max-w-sm flex-col items-start gap-2">
+			<Logo className="h-5 w-auto md:h-6" />
 			<div className="flex flex-col gap-4 text-marketing-fg-muted">
-				<p>{appConfig.description}</p>
+				<p>
+					Our mission is to provide free education to help businesses improve
+					website accessibility.
+				</p>
 			</div>
 		</div>
 	);
@@ -99,24 +90,9 @@ export function Footer() {
 					</div>
 
 					{/* Bottom Section */}
-					<div className="flex flex-col items-center justify-between gap-8 border-t border-marketing-border pt-8 sm:flex-row text-sm">
-						<div className="text-marketing-fg-muted order-2 sm:order-1">
-							© {new Date().getFullYear()} {appConfig.appName}. All rights
-							reserved.
-						</div>
-						<div className="flex items-center gap-6 order-1 sm:order-2">
-							{socialLinks.map((link) => (
-								<Link
-									key={link.name}
-									href={link.href}
-									target="_blank"
-									rel="noopener noreferrer"
-									aria-label={link.name}
-									className="text-marketing-fg-muted hover:text-marketing-fg transition-all duration-200 hover:scale-110 active:scale-95 *:size-5"
-								>
-									<link.icon />
-								</Link>
-							))}
+					<div className="border-t border-marketing-border pt-8 text-sm">
+						<div className="text-marketing-fg-muted text-center sm:text-left">
+							© {new Date().getFullYear()} DAPEN.org. All rights reserved.
 						</div>
 					</div>
 				</div>

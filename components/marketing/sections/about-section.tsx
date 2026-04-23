@@ -2,38 +2,39 @@
 
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
-import { appConfig } from "@/config/app.config";
 import { cn } from "@/lib/utils";
 
 const stats = [
 	{
-		value: "2M+",
-		description: "Tasks completed every week across thousands of teams.",
+		value: "10K",
+		description: "Accounts on DAPEN working to make the web more accessible.",
 	},
 	{
-		value: "99.98%",
-		description: "Uptime - because your work never stops.",
+		value: "24/7",
+		description: "Support — because we are a community.",
 	},
 ];
 
 const values = [
 	{
 		title: "Simplicity",
-		description: "We believe powerful tools don't have to be complicated.",
+		description:
+			"We believe accessibility should be easy for every business to understand.",
 	},
 	{
-		title: "Customer Focus",
+		title: "Education First",
 		description:
-			"Every feature we build starts with understanding what you actually need.",
+			"We believe business owners deserve clear and honest accessibility guidance.",
 	},
 	{
-		title: "Reliability",
+		title: "Community Driven",
 		description:
-			"You can count on us. We're here when you need us, every time.",
+			"We are community-driven, constantly striving to enhance accessibility across the web.",
 	},
 	{
 		title: "Continuous Improvement",
-		description: "We're always learning and getting better at what we do.",
+		description:
+			"We're always learning more and improving how we support business owners.",
 	},
 ];
 
@@ -52,13 +53,15 @@ export function AboutSection() {
 									"sm:text-[5rem] sm:leading-20",
 								)}
 							>
-								We're building something different.
+								We're building a community.
 							</h1>
 							<div className="flex max-w-3xl flex-col gap-4 text-lg leading-8 text-marketing-fg-muted">
 								<p>
-									A small team with big ambitions. We're on a mission to help
-									teams work better together - building tools that get out of
-									your way and let you focus on what matters most.
+									We believe accessibility is essential in today&apos;s growing
+									digital world. Everyone deserves equal access to online
+									products and services. Create your free account to show your
+									commitment to improving accessibility and building a more
+									inclusive internet.
 								</p>
 							</div>
 						</div>
@@ -72,7 +75,7 @@ export function AboutSection() {
 					<div className="flex max-w-2xl flex-col gap-6">
 						<div className="flex flex-col gap-2">
 							<div className="text-sm font-semibold text-marketing-fg-muted">
-								Built for scale
+								Education First
 							</div>
 							<h2
 								className={cn(
@@ -81,14 +84,14 @@ export function AboutSection() {
 									"sm:text-5xl sm:leading-14",
 								)}
 							>
-								The platform powering teams everywhere.
+								We believe education is the key.
 							</h2>
 						</div>
 						<div className="text-base leading-7 text-marketing-fg-muted text-pretty">
 							<p>
-								{appConfig.appName} helps teams deliver organized, efficient
-								work across the world. From small startups to enterprise teams,
-								we process millions of tasks each month.
+								By providing clear guidance, practical tools, and free
+								resources, we aim to make accessibility easier to understand and
+								improve.
 							</p>
 						</div>
 					</div>
@@ -168,8 +171,8 @@ export function AboutSection() {
 						</div>
 						<div className="max-w-3xl text-base leading-7 text-marketing-fg-muted text-pretty">
 							<p>
-								Join thousands of teams already using {appConfig.appName} to
-								work smarter, not harder.
+								Create your free account and get access to resources to improve
+								your website&apos;s accessibility.
 							</p>
 						</div>
 					</div>
@@ -182,7 +185,7 @@ export function AboutSection() {
 								"dark:bg-marketing-accent",
 							)}
 						>
-							Start free trial
+							Get started free
 						</Link>
 						<Link
 							href="/contact"
@@ -192,7 +195,7 @@ export function AboutSection() {
 								"dark:hover:bg-white/10",
 							)}
 						>
-							Contact us
+							Contact Us
 							<ArrowRightIcon className="size-3.5 transition-transform group-hover:translate-x-0.5" />
 						</Link>
 					</div>

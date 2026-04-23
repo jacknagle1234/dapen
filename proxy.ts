@@ -214,6 +214,6 @@ export default async function proxy(req: NextRequest) {
 
 export const config = {
 	matcher: [
-		"/((?!monitoring|monitoring-tunnel|marketing/avatars|marketing/logos|marketing/placeholders|images|fonts|assets|.well-known|favicon.svg|apple-touch-icon.png|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+		"/((?!monitoring|monitoring-tunnel|marketing/avatars|marketing/logos|marketing/placeholders|images|fonts|assets|.well-known|favicon.svg|logo.svg|logo.png|apple-touch-icon.png|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
 	],
 };

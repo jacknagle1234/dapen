@@ -11,7 +11,7 @@ interface Feature {
 	link: string;
 	linkText: string;
 	color: "green" | "blue" | "purple" | "brown";
-	placement: "bottom-right" | "bottom-left";
+	placement: "bottom" | "bottom-right" | "bottom-left";
 	image: {
 		light: string;
 		dark: string;
@@ -21,29 +21,51 @@ interface Feature {
 }
 
 function FeatureCard({ feature }: { feature: Feature }) {
+	const { image } = feature;
+	const sameImageForBothThemes = image.light === image.dark;
+
 	return (
 		<div className="overflow-hidden rounded-lg bg-marketing-card p-2">
-			{/* Screenshot */}
-			<div className="relative overflow-hidden rounded-sm dark:after:absolute dark:after:inset-0 dark:after:rounded-sm dark:after:outline dark:after:outline-1 dark:after:-outline-offset-1 dark:after:outline-white/10 dark:after:content-['']">
+			{/* Screenshot — fixed 16:9 frame (1200×675) so both cards match */}
+			<div
+				className={cn(
+					"relative aspect-video w-full overflow-hidden rounded-sm",
+					"dark:after:absolute dark:after:inset-0 dark:after:rounded-sm",
+					"dark:after:outline dark:after:outline-1 dark:after:-outline-offset-1 dark:after:outline-white/10 dark:after:content-['']",
+				)}
+			>
 				<GradientCard
 					color={feature.color}
 					placement={feature.placement}
 					rounded="sm"
+					className="absolute inset-0 h-full w-full [&>div.relative]:flex [&>div.relative]:h-full [&>div.relative]:min-h-0 [&>div.relative]:flex-col [&>div.relative>div]:min-h-0 [&>div.relative>div]:flex-1"
 				>
-					<img
-						src={feature.image.light}
-						alt={feature.title}
-						width={feature.image.width}
-						height={feature.image.height}
-						className="dark:hidden w-full h-auto"
-					/>
-					<img
-						src={feature.image.dark}
-						alt={feature.title}
-						width={feature.image.width}
-						height={feature.image.height}
-						className="hidden dark:block w-full h-auto"
-					/>
+					{sameImageForBothThemes ? (
+						<img
+							src={image.light}
+							alt={feature.title}
+							width={image.width}
+							height={image.height}
+							className="w-full h-auto"
+						/>
+					) : (
+						<>
+							<img
+								src={image.light}
+								alt={feature.title}
+								width={image.width}
+								height={image.height}
+								className="dark:hidden w-full h-auto"
+							/>
+							<img
+								src={image.dark}
+								alt={feature.title}
+								width={image.width}
+								height={image.height}
+								className="hidden dark:block w-full h-auto"
+							/>
+						</>
+					)}
 				</GradientCard>
 			</div>
 
@@ -72,33 +94,33 @@ function FeatureCard({ feature }: { feature: Feature }) {
 export function FeaturesSection() {
 	const features: Feature[] = [
 		{
-			title: "Auth & Organizations",
+			title: "Your free DAPEN account",
 			description:
-				"Secure authentication with Better Auth. Built-in support for multi-tenant organizations, member invitations and granular role-based permissions.",
-			link: "#",
-			linkText: "Explore Auth",
+				"Get access to easy-to-use tools, practical guides, and resources that help you improve your website accessibility step by step.",
+			link: "/auth/sign-up",
+			linkText: "Get started free",
 			color: "blue",
-			placement: "bottom-right",
+			placement: "bottom",
 			image: {
-				light: "/marketing/placeholders/placeholder-light.webp",
-				dark: "/marketing/placeholders/placeholder-dark.webp",
-				width: 600,
-				height: 400,
+				light: "/marketing/images/dapen-white.webp",
+				dark: "/marketing/images/dapen-white.webp",
+				width: 1200,
+				height: 675,
 			},
 		},
 		{
-			title: "AI & Credits System",
+			title: "Free DAPEN Toolbar",
 			description:
-				"Launch AI-powered features instantly. Includes a complete chatbot UI, OpenAI integration and a flexible credit consumption system.",
-			link: "#",
-			linkText: "Review Stack",
+				"Add the free accessibility toolbar to your website in minutes and start improving the experience for your visitors right away.",
+			link: "/blog/what-is-a-dapen-toolbar",
+			linkText: "Learn More",
 			color: "purple",
-			placement: "bottom-left",
+			placement: "bottom",
 			image: {
-				light: "/marketing/placeholders/placeholder-light.webp",
-				dark: "/marketing/placeholders/placeholder-dark.webp",
-				width: 600,
-				height: 400,
+				light: "/marketing/images/dapen-toolbar.webp",
+				dark: "/marketing/images/dapen-toolbar.webp",
+				width: 1200,
+				height: 675,
 			},
 		},
 	];
@@ -106,11 +128,11 @@ export function FeaturesSection() {
 	return (
 		<section id="features" className="py-16 scroll-mt-14">
 			<div className="mx-auto flex max-w-2xl flex-col gap-10 px-6 md:max-w-3xl lg:max-w-7xl lg:gap-16 lg:px-10">
-				{/* Header */}
-				<div className="flex max-w-2xl flex-col gap-6">
+				{/* Header — wider toward center; left edge unchanged (self-start) */}
+				<div className="flex w-full max-w-2xl flex-col gap-6 self-start lg:max-w-4xl xl:max-w-5xl">
 					<div className="flex flex-col gap-2">
 						<div className="text-sm font-semibold leading-7 text-marketing-fg-muted">
-							Powerful Features
+							Free account
 						</div>
 						<h2
 							className={cn(
@@ -119,13 +141,13 @@ export function FeaturesSection() {
 								"sm:text-5xl sm:leading-14",
 							)}
 						>
-							The complete SaaS foundation
+							Free tools to improve website accessibility
 						</h2>
 					</div>
 					<div className="text-base leading-7 text-marketing-fg-muted text-pretty">
 						<p>
-							Everything you need to build a production-ready application. From
-							authentication to payments, it's all included.
+							Create a free account and get access to resources designed to help
+							businesses improve website accessibility.
 						</p>
 					</div>
 				</div>

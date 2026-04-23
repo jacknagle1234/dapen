@@ -4,7 +4,7 @@ import { appConfig } from "@/config/app.config";
 
 export const metadata: Metadata = {
 	title: "About",
-	description: `Learn more about ${appConfig.appName} and our mission to help businesses succeed.`,
+	description: `Learn about DAPEN.org — our mission to educate business owners and improve website accessibility.`,
 };
 
 export default function AboutPage() {

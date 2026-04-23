@@ -7,6 +7,7 @@ import type * as React from "react";
 import "./globals.css";
 import "cropperjs/dist/cropper.css";
 
+import { DapenToolbarNavigationCleanup } from "@/components/marketing/dapen-toolbar-navigation-cleanup";
 import { SessionProvider } from "@/components/session-provider";
 import { appConfig } from "@/config/app.config";
 import { getSession } from "@/lib/auth/server";
@@ -74,7 +75,10 @@ export default async function RootLayout({
 						session ? (session.session.activeOrganizationId ?? null) : undefined
 					}
 				>
-					<SessionProvider initialSession={session}>{children}</SessionProvider>
+					<SessionProvider initialSession={session}>
+						<DapenToolbarNavigationCleanup />
+						{children}
+					</SessionProvider>
 				</TRPCProvider>
 				<Analytics />
 				<SpeedInsights />

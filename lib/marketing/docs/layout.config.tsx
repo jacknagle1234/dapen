@@ -6,7 +6,7 @@ export function baseOptions(): BaseLayoutProps {
 		nav: {
 			title: (
 				<div className="flex items-center gap-2">
-					<Logo />
+					<Logo className="h-5 w-auto md:h-6" />
 				</div>
 			),
 			url: "/",

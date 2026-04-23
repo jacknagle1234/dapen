@@ -3,63 +3,51 @@
 import { InfiniteSlider } from "@/components/marketing/primitives/infinite-slider";
 import { ProgressiveBlur } from "@/components/marketing/primitives/progressive-blur";
 
-const logos = [
-	{
-		src: "/marketing/logos/nvidia.svg",
-		alt: "Nvidia Logo",
-		height: "h-5",
-	},
-	{
-		src: "/marketing/logos/column.svg",
-		alt: "Column Logo",
-		height: "h-4",
-	},
-	{
-		src: "/marketing/logos/github.svg",
-		alt: "GitHub Logo",
-		height: "h-4",
-	},
-	{
-		src: "/marketing/logos/nike.svg",
-		alt: "Nike Logo",
-		height: "h-5",
-	},
-	{
-		src: "/marketing/logos/lemonsqueezy.svg",
-		alt: "Lemon Squeezy Logo",
-		height: "h-5",
-	},
-	{
-		src: "/marketing/logos/laravel.svg",
-		alt: "Laravel Logo",
-		height: "h-4",
-	},
-	{
-		src: "/marketing/logos/lilly.svg",
-		alt: "Lilly Logo",
-		height: "h-7",
-	},
-	{
-		src: "/marketing/logos/openai.svg",
-		alt: "OpenAI Logo",
-		height: "h-6",
-	},
-];
+const builderLogoEntries = [
+	["wordpress", "WordPress logo"],
+	["shopify", "Shopify logo"],
+	["wix", "Wix logo"],
+	["webflow", "Webflow logo"],
+	["elementor", "Elementor logo"],
+	["squarespace", "Squarespace logo"],
+	["godaddy", "GoDaddy logo"],
+	["base44", "Base44 logo"],
+] as const;
+
+const builderLogos = builderLogoEntries.map(([id, alt]) => ({
+	id,
+	src: `/marketing/logos/${id}.svg`,
+	srcDark: `/marketing/logos/${id}-dark.svg`,
+	alt,
+}));
+
+/** Uniform cap height; width follows each SVG’s aspect ratio */
+const logoImgLightClassName =
+	"mx-auto block h-10 w-auto max-w-none object-contain dark:hidden";
+const logoImgDarkClassName =
+	"mx-auto hidden h-10 w-auto max-w-none object-contain dark:block";
 
 export function LogoCloudSection() {
 	return (
 		<section className="overflow-hidden border-border/50 border-t">
 			<div className="group relative mx-auto max-w-screen-2xl px-4 sm:px-6 md:px-12">
 				<div className="relative w-full py-6">
-					<InfiniteSlider speedOnHover={20} speed={40} gap={112}>
-						{logos.map((logo) => (
-							<div key={logo.alt} className="flex">
+					<InfiniteSlider speedOnHover={20} speed={40} gap={96}>
+						{builderLogos.map((logo) => (
+							<div key={logo.id} className="flex items-center">
 								<img
-									className={`mx-auto ${logo.height} w-fit dark:invert`}
+									className={logoImgLightClassName}
 									src={logo.src}
 									alt={logo.alt}
-									width={100}
-									height={20}
+									width={160}
+									height={40}
+								/>
+								<img
+									className={logoImgDarkClassName}
+									src={logo.srcDark}
+									alt={logo.alt}
+									width={160}
+									height={40}
 								/>
 							</div>
 						))}

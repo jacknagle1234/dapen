@@ -99,7 +99,7 @@ export function ContactSection() {
 					</h1>
 					<div className="max-w-3xl text-lg leading-8 text-marketing-fg-muted">
 						<p>
-							Questions about pricing, features or enterprise plans? Our team is
+							Questions about your account, tools, or accessibility? Our team is
 							ready to help.
 						</p>
 					</div>

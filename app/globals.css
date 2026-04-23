@@ -21,7 +21,7 @@
   --popover: var(--color-white);
   --popover-foreground: var(--color-neutral-950);
 
-  --primary: var(--color-neutral-950);
+  --primary: #2672de;
   --primary-foreground: var(--color-white);
 
   --secondary: oklch(96.76% 0.0013 286.38);
@@ -70,8 +70,8 @@
   --marketing-border: var(--color-neutral-200);
   --marketing-border-strong: var(--color-neutral-300);
 
-  --marketing-accent: var(--color-neutral-950);
-  --marketing-accent-hover: var(--color-neutral-800);
+  --marketing-accent: #2672de;
+  --marketing-accent-hover: #4782d4;
   --marketing-accent-fg: var(--color-white);
 
   --marketing-card: color-mix(in srgb, var(--color-neutral-950), transparent 96%);

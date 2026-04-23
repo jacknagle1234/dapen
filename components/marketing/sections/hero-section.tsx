@@ -5,7 +5,16 @@ import Link from "next/link";
 import { GradientCard } from "@/components/marketing/primitives/gradient-card";
 import { cn } from "@/lib/utils";
 
+const heroImage = {
+	light: "/marketing/images/hero-light.png",
+	dark: "/marketing/images/hero-dark.png",
+	width: 3040,
+	height: 1790,
+} as const;
+
 function HeroScreenshot() {
+	const heroAlt = "DAPEN toolbar and accessibility tools in the browser";
+
 	return (
 		<div className="flex flex-col gap-32">
 			{/* Mobile/Tablet Screenshot - visible below lg */}
@@ -14,20 +23,23 @@ function HeroScreenshot() {
 				placement="bottom-right"
 				className="lg:hidden"
 				rounded="xl"
+				contentFit="contain"
 			>
 				<img
-					src="/marketing/placeholders/placeholder-hero-light.webp"
-					alt="App screenshot"
-					width={1328}
-					height={727}
-					className="dark:hidden w-full h-auto"
+					src={heroImage.light}
+					alt={heroAlt}
+					width={heroImage.width}
+					height={heroImage.height}
+					className="block h-auto w-full max-w-full object-contain dark:hidden"
+					decoding="async"
 				/>
 				<img
-					src="/marketing/placeholders/placeholder-hero-dark.webp"
-					alt="App screenshot"
-					width={1328}
-					height={727}
-					className="hidden dark:block w-full h-auto"
+					src={heroImage.dark}
+					alt={heroAlt}
+					width={heroImage.width}
+					height={heroImage.height}
+					className="hidden h-auto w-full max-w-full object-contain dark:block"
+					decoding="async"
 				/>
 			</GradientCard>
 
@@ -37,20 +49,23 @@ function HeroScreenshot() {
 				placement="bottom"
 				className="hidden lg:block"
 				rounded="2xl"
+				contentFit="contain"
 			>
 				<img
-					src="/marketing/placeholders/placeholder-hero-light.webp"
-					alt="App screenshot"
-					width={1328}
-					height={727}
-					className="dark:hidden w-full h-auto"
+					src={heroImage.light}
+					alt={heroAlt}
+					width={heroImage.width}
+					height={heroImage.height}
+					className="block h-auto w-full max-w-full object-contain dark:hidden"
+					decoding="async"
 				/>
 				<img
-					src="/marketing/placeholders/placeholder-hero-dark.webp"
-					alt="App screenshot"
-					width={1328}
-					height={727}
-					className="hidden dark:block w-full h-auto"
+					src={heroImage.dark}
+					alt={heroAlt}
+					width={heroImage.width}
+					height={heroImage.height}
+					className="hidden h-auto w-full max-w-full object-contain dark:block"
+					decoding="async"
 				/>
 			</GradientCard>
 		</div>
@@ -65,7 +80,7 @@ export function HeroSection() {
 					<div className="flex flex-col items-start gap-6">
 						{/* Announcement Pill */}
 						<Link
-							href="#"
+							href="/auth/sign-up"
 							className={cn(
 								"relative inline-flex max-w-full items-center gap-3 overflow-hidden rounded-md px-3.5 py-2 text-sm",
 								"bg-marketing-card",
@@ -75,7 +90,7 @@ export function HeroSection() {
 							)}
 						>
 							<span className="truncate text-pretty sm:truncate">
-								Introducing our latest features
+								Install our free DAPEN Toolbar
 							</span>
 							<span className="hidden h-3 w-px bg-marketing-card-hover sm:block" />
 							<span className="inline-flex shrink-0 items-center gap-1 font-semibold">
@@ -87,21 +102,22 @@ export function HeroSection() {
 						{/* Headline */}
 						<h1
 							className={cn(
-								"max-w-5xl text-balance font-display text-5xl tracking-display-tight",
+								"max-w-5xl self-start text-balance font-display font-semibold tracking-display-tight",
 								"text-marketing-fg",
-								"sm:text-5xl sm:leading-14",
-								"lg:text-[5rem] lg:leading-20",
+								"text-3xl leading-tight sm:text-4xl sm:leading-tight",
+								"lg:max-w-6xl lg:text-[3.75rem] lg:leading-[1.09]",
+								"xl:max-w-7xl xl:text-[4.05rem] xl:leading-[1.09]",
 							)}
 						>
-							Production-ready SaaS. Right out of the box.
+							Digital Accessibility Protection & Education Network
 						</h1>
 
 						{/* Description */}
 						<div className="flex max-w-3xl flex-col gap-4 text-lg leading-8 text-marketing-fg-muted">
 							<p>
-								Demo application built with Achromatic. Next.js 16 starter kit
-								with auth, organizations, subscriptions, credits, AI chatbot and
-								admin panel - powered by Better Auth and tRPC.
+								Create your free account to access tools, education, and
+								resources designed to help businesses improve website
+								accessibility.
 							</p>
 						</div>
 
@@ -114,7 +130,7 @@ export function HeroSection() {
 									"bg-marketing-accent text-marketing-accent-fg hover:bg-marketing-accent-hover",
 								)}
 							>
-								Get Started
+								Get started free
 							</Link>
 							<Link
 								href="/contact"
@@ -123,7 +139,7 @@ export function HeroSection() {
 									"text-marketing-fg hover:bg-marketing-card-hover",
 								)}
 							>
-								Book a Demo
+								Contact Us
 								<ArrowRightIcon className="size-3.5 transition-transform group-hover:translate-x-0.5" />
 							</Link>
 						</div>

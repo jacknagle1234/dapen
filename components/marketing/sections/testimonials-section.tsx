@@ -14,7 +14,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
 	return (
 		<figure className="flex flex-col justify-between gap-10 rounded-md bg-marketing-card p-6 text-sm">
 			<blockquote className="flex flex-col gap-4">
-				<p>"{testimonial.quote}"</p>
+				<p className="line-clamp-2 text-pretty">"{testimonial.quote}"</p>
 			</blockquote>
 			<figcaption className="flex items-center gap-4">
 				<div className="flex size-12 overflow-hidden rounded-full outline -outline-offset-1 outline-black/5 dark:outline-white/5">
@@ -40,52 +40,50 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
 export function TestimonialsSection() {
 	const testimonials: Testimonial[] = [
 		{
-			name: "Sarah Chen",
-			role: "CTO",
-			company: "TechStart",
-			quote:
-				"This platform has completely transformed how our team works. We're more productive than ever.",
-			avatar: "/marketing/avatars/woman-44.jpg",
-		},
-		{
-			name: "Marcus Johnson",
-			role: "Founder",
-			company: "GrowthLabs",
-			quote:
-				"The best investment we've made. It scales with us and just works beautifully.",
+			name: "Michael Turner",
+			role: "CEO",
+			company: "Turner Roofing",
+			quote: "Huge value for free—the tools and guides genuinely help.",
 			avatar: "/marketing/avatars/man-32.jpg",
 		},
 		{
-			name: "Emily Rodriguez",
-			role: "Operations Director",
-			company: "Innovate Co",
+			name: "Sarah Collins",
+			role: "Marketing Assistant",
+			company: "Blue Harbor Dental",
 			quote:
-				"Onboarding was seamless. Our team was up and running within days, not weeks.",
-			avatar: "/marketing/avatars/woman-68.jpg",
+				"I feared accessibility lawsuits. DAPEN's support and community gave me confidence.",
+			avatar: "/marketing/avatars/woman-44.jpg",
 		},
 		{
-			name: "David Kim",
-			role: "Product Lead",
-			company: "BuildFast",
+			name: "David Ramirez",
+			role: "Website Manager",
+			company: "Green Valley",
 			quote:
-				"The insights and analytics have changed how we make decisions. Highly recommended.",
+				"I've used paid widgets—the DAPEN Toolbar matches them, and it's free.",
 			avatar: "/marketing/avatars/man-75.jpg",
 		},
 		{
-			name: "Priya Sharma",
-			role: "Engineering Manager",
-			company: "DevFlow",
+			name: "Jessica Brown",
+			role: "CEO",
+			company: "Brown Consulting",
 			quote:
-				"Integration was effortless. Everything just works together perfectly.",
-			avatar: "/marketing/avatars/woman-26.jpg",
+				"The team really understands accessibility—clear, detailed resources.",
+			avatar: "/marketing/avatars/woman-68.jpg",
 		},
 		{
-			name: "Alex Turner",
-			role: "Team Lead",
-			company: "AgileWorks",
-			quote:
-				"Outstanding support. Any question we've had was answered quickly and thoroughly.",
+			name: "Kevin Patel",
+			role: "Website Manager",
+			company: "Silver Oak Finance",
+			quote: "Support replied fast—and helped me actually understand.",
 			avatar: "/marketing/avatars/man-46.jpg",
+		},
+		{
+			name: "Emily Johnson",
+			role: "Marketing Assistant",
+			company: "Westside Auto",
+			quote:
+				"I knew nothing about accessibility before DAPEN. Now it's manageable.",
+			avatar: "/marketing/avatars/woman-26.jpg",
 		},
 	];
 
@@ -102,14 +100,11 @@ export function TestimonialsSection() {
 								"sm:text-5xl sm:leading-14",
 							)}
 						>
-							Loved by teams everywhere
+							Business owners feel protected
 						</h2>
 					</div>
 					<div className="text-base leading-7 text-marketing-fg-muted text-pretty">
-						<p>
-							See what our customers have to say about their experience with our
-							platform.
-						</p>
+						<p>See why teams love our tools and resources.</p>
 					</div>
 				</div>
 

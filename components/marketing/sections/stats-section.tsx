@@ -12,18 +12,18 @@ export function StatsSection() {
 	const stats: Stat[] = [
 		{
 			value: "10K+",
-			label: "Active Users",
+			label: "Active accounts",
 			description: "Growing community worldwide",
 		},
 		{
-			value: "99.9%",
-			label: "Uptime",
-			description: "Reliable infrastructure you can trust",
+			value: "2K+",
+			label: "Installations",
+			description: "DAPEN Toolbars live on websites",
 		},
 		{
 			value: "50+",
-			label: "Integrations",
-			description: "Connect with your favorite tools",
+			label: "Website Builders",
+			description: "Designed for popular builders",
 		},
 		{
 			value: "24/7",
@@ -39,7 +39,7 @@ export function StatsSection() {
 				<div className="flex max-w-2xl flex-col gap-6">
 					<div className="flex flex-col gap-2">
 						<div className="text-sm font-semibold leading-7 text-marketing-fg-muted">
-							By the numbers
+							Our community
 						</div>
 						<h2
 							className={cn(
@@ -48,13 +48,13 @@ export function StatsSection() {
 								"sm:text-5xl sm:leading-14",
 							)}
 						>
-							Trusted by teams worldwide
+							Largest accessibility network
 						</h2>
 					</div>
 					<div className="text-base leading-7 text-marketing-fg-muted text-pretty">
 						<p>
-							Join thousands of companies that rely on our platform to power
-							their business every day.
+							Thousands of business owners use DAPEN&apos;s free tools and
+							resources to make their websites more accessible.
 						</p>
 					</div>
 				</div>

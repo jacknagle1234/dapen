@@ -22,7 +22,7 @@ const PRODUCT_LINKS = [
 	{
 		title: "Features",
 		href: "/#features",
-		description: "Explore all the powerful tools we offer to help you succeed.",
+		description: "Explore the tools we offer to improve website accessibility.",
 	},
 	{
 		title: "FAQ",
@@ -31,34 +31,11 @@ const PRODUCT_LINKS = [
 	},
 ];
 
-const RESOURCE_LINKS = [
-	{
-		title: "Blog",
-		href: "/blog",
-		description: "Stay up to date with the latest news and articles.",
-	},
-	{
-		title: "Documentation",
-		href: "/docs",
-		description: "Learn how to use our platform with detailed guides.",
-	},
-	{
-		title: "Changelog",
-		href: "/changelog",
-		description: "Discover the latest features and improvements.",
-	},
-];
-
 const COMPANY_LINKS = [
 	{
 		title: "About",
 		href: "/about",
 		description: "Learn more about our mission and the team.",
-	},
-	{
-		title: "Careers",
-		href: "/careers",
-		description: "Join us in building the future.",
 	},
 ];
 
@@ -107,7 +84,7 @@ export function Header() {
 					{/* Logo - Left */}
 					<div className="flex items-center">
 						<Link href="/" className="inline-flex items-stretch">
-							<Logo />
+							<Logo className="h-5 w-auto md:h-6" />
 						</Link>
 					</div>
 
@@ -137,34 +114,15 @@ export function Header() {
 								<NavigationMenuItem>
 									<NavigationMenuLink asChild>
 										<Link
-											href="/pricing"
+											href="/blog"
 											className={cn(
 												navigationMenuTriggerStyle(),
 												"rounded-full bg-transparent text-marketing-fg hover:bg-marketing-card-hover hover:text-marketing-fg focus:bg-marketing-card-hover focus:text-marketing-fg",
 											)}
 										>
-											Pricing
+											Blog
 										</Link>
 									</NavigationMenuLink>
-								</NavigationMenuItem>
-
-								<NavigationMenuItem>
-									<NavigationMenuTrigger className="rounded-full bg-transparent text-marketing-fg hover:bg-marketing-card-hover hover:text-marketing-fg data-[state=open]:bg-marketing-card-hover">
-										Resources
-									</NavigationMenuTrigger>
-									<NavigationMenuContent>
-										<ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-											{RESOURCE_LINKS.map((link) => (
-												<ListItem
-													key={link.title}
-													title={link.title}
-													href={link.href}
-												>
-													{link.description}
-												</ListItem>
-											))}
-										</ul>
-									</NavigationMenuContent>
 								</NavigationMenuItem>
 
 								<NavigationMenuItem>
@@ -221,7 +179,7 @@ export function Header() {
 											"bg-marketing-accent text-marketing-accent-fg hover:bg-marketing-accent-hover transition-colors",
 										)}
 									>
-										Get started
+										Get started free
 									</Link>
 								</div>
 							) : null}
@@ -278,7 +236,7 @@ export function Header() {
 											onClick={() => setMenuOpen(false)}
 											className="w-full rounded-full bg-marketing-accent py-4 text-center text-xl font-medium text-marketing-accent-fg transition-colors hover:bg-marketing-accent-hover"
 										>
-											Get started
+											Get started free
 										</Link>
 									</div>
 								) : null}
@@ -300,29 +258,16 @@ export function Header() {
 										{link.title}
 									</Link>
 								))}
-								<Link
-									href="/pricing"
-									onClick={() => setMenuOpen(false)}
-									className="inline-flex rounded-full px-4 -mx-4 py-2 text-3xl font-medium text-marketing-fg hover:bg-marketing-card-hover transition-colors"
-								>
-									Pricing
-								</Link>
 							</div>
 
 							<div className="flex flex-col gap-4">
-								<p className="text-xs font-semibold tracking-wider text-marketing-fg-subtle uppercase">
-									Resources
-								</p>
-								{RESOURCE_LINKS.map((link) => (
-									<Link
-										key={link.title}
-										href={link.href}
-										onClick={() => setMenuOpen(false)}
-										className="inline-flex rounded-full px-4 -mx-4 py-2 text-3xl font-medium text-marketing-fg hover:bg-marketing-card-hover transition-colors"
-									>
-										{link.title}
-									</Link>
-								))}
+								<Link
+									href="/blog"
+									onClick={() => setMenuOpen(false)}
+									className="inline-flex rounded-full px-4 -mx-4 py-2 text-3xl font-medium text-marketing-fg hover:bg-marketing-card-hover transition-colors"
+								>
+									Blog
+								</Link>
 							</div>
 
 							<div className="flex flex-col gap-4">

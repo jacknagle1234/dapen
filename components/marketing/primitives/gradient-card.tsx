@@ -20,6 +20,8 @@ interface GradientCardProps {
 	className?: string;
 	children: ReactNode;
 	rounded?: "sm" | "md" | "lg" | "xl" | "2xl";
+	/** cover fills the frame (may crop); contain shows the full image */
+	contentFit?: "cover" | "contain";
 }
 
 // Gradient colors for light and dark modes
@@ -77,12 +79,19 @@ const roundedStyles = {
 	"2xl": "rounded-2xl",
 };
 
+const contentFitChildStyles: Record<"cover" | "contain", string> = {
+	cover: "*:size-full *:object-cover",
+	// Do not use *:display here — it overrides Tailwind `hidden` on stacked light/dark <img>s.
+	contain: "*:h-auto *:w-full *:max-w-full *:object-contain",
+};
+
 export function GradientCard({
 	color = "slate",
 	placement = "bottom",
 	className,
 	children,
 	rounded = "lg",
+	contentFit = "cover",
 }: GradientCardProps) {
 	const colors = gradientColors[color];
 
@@ -127,7 +136,7 @@ export function GradientCard({
 					className={cn(
 						"relative overflow-hidden ring-1 ring-marketing-border",
 						innerRoundedStyles[placement],
-						"*:size-full *:object-cover",
+						contentFitChildStyles[contentFit],
 					)}
 				>
 					{children}
