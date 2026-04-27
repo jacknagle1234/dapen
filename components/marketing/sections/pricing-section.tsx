@@ -115,7 +115,7 @@ function PricingCard({
 						"bg-marketing-card-hover text-marketing-fg",
 					)}
 				>
-					Get Started Free
+					Purchase Protection
 				</Link>
 			);
 		}

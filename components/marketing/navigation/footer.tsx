@@ -44,11 +44,10 @@ const footerLinks = [
 function AppInfo() {
 	return (
 		<div className="flex max-w-sm flex-col items-start gap-2">
-			<Logo className="h-5 w-auto md:h-6" />
+			<Logo className="h-7 w-auto md:h-8" />
 			<div className="flex flex-col gap-4 text-marketing-fg-muted">
 				<p>
-					Our mission is to provide free education to help businesses improve
-					website accessibility.
+					Providing business owners with total peace of mind in a digital world.
 				</p>
 			</div>
 		</div>

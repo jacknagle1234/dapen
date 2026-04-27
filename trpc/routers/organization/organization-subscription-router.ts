@@ -25,6 +25,7 @@ import {
 import { getPlanById, getPriceByStripePriceId } from "@/lib/billing/plans";
 import { db } from "@/lib/db";
 import { memberTable, organizationTable } from "@/lib/db/schema";
+import { MemberRole } from "@/lib/db/schema/enums";
 import { logger } from "@/lib/logger";
 import {
 	createCheckoutSchema,
@@ -272,11 +273,15 @@ export const organizationSubscriptionRouter = createTRPCRouter({
 
 			const { organization, user, membership } = ctx;
 
-			// Only owners and admins can manage billing
-			if (membership.role !== "owner" && membership.role !== "admin") {
+			// Only owners and Account Managers can manage billing
+			if (
+				membership.role !== MemberRole.owner &&
+				membership.role !== MemberRole.account_manager
+			) {
 				throw new TRPCError({
 					code: "FORBIDDEN",
-					message: "Only organization owners and admins can manage billing",
+					message:
+						"Only organization owners and Account Managers can manage billing",
 				});
 			}
 
@@ -408,11 +413,15 @@ export const organizationSubscriptionRouter = createTRPCRouter({
 
 			const { organization, membership } = ctx;
 
-			// Only owners and admins can access billing portal
-			if (membership.role !== "owner" && membership.role !== "admin") {
+			// Only owners and Account Managers can access billing portal
+			if (
+				membership.role !== MemberRole.owner &&
+				membership.role !== MemberRole.account_manager
+			) {
 				throw new TRPCError({
 					code: "FORBIDDEN",
-					message: "Only organization owners and admins can access billing",
+					message:
+						"Only organization owners and Account Managers can access billing",
 				});
 			}
 
@@ -453,12 +462,15 @@ export const organizationSubscriptionRouter = createTRPCRouter({
 
 			const { organization, membership } = ctx;
 
-			// Only owners and admins can cancel
-			if (membership.role !== "owner" && membership.role !== "admin") {
+			// Only owners and Account Managers can cancel
+			if (
+				membership.role !== MemberRole.owner &&
+				membership.role !== MemberRole.account_manager
+			) {
 				throw new TRPCError({
 					code: "FORBIDDEN",
 					message:
-						"Only organization owners and admins can cancel subscriptions",
+						"Only organization owners and Account Managers can cancel subscriptions",
 				});
 			}
 
@@ -518,12 +530,15 @@ export const organizationSubscriptionRouter = createTRPCRouter({
 
 			const { organization, membership } = ctx;
 
-			// Only owners and admins can reactivate
-			if (membership.role !== "owner" && membership.role !== "admin") {
+			// Only owners and Account Managers can reactivate
+			if (
+				membership.role !== MemberRole.owner &&
+				membership.role !== MemberRole.account_manager
+			) {
 				throw new TRPCError({
 					code: "FORBIDDEN",
 					message:
-						"Only organization owners and admins can reactivate subscriptions",
+						"Only organization owners and Account Managers can reactivate subscriptions",
 				});
 			}
 
@@ -622,11 +637,15 @@ export const organizationSubscriptionRouter = createTRPCRouter({
 
 			const { organization, membership } = ctx;
 
-			// Only owners and admins can preview changes
-			if (membership.role !== "owner" && membership.role !== "admin") {
+			// Only owners and Account Managers can preview changes
+			if (
+				membership.role !== MemberRole.owner &&
+				membership.role !== MemberRole.account_manager
+			) {
 				throw new TRPCError({
 					code: "FORBIDDEN",
-					message: "Only organization owners and admins can manage billing",
+					message:
+						"Only organization owners and Account Managers can manage billing",
 				});
 			}
 
@@ -731,11 +750,15 @@ export const organizationSubscriptionRouter = createTRPCRouter({
 
 			const { organization, membership } = ctx;
 
-			// Only owners and admins can change plans
-			if (membership.role !== "owner" && membership.role !== "admin") {
+			// Only owners and Account Managers can change plans
+			if (
+				membership.role !== MemberRole.owner &&
+				membership.role !== MemberRole.account_manager
+			) {
 				throw new TRPCError({
 					code: "FORBIDDEN",
-					message: "Only organization owners and admins can manage billing",
+					message:
+						"Only organization owners and Account Managers can manage billing",
 				});
 			}
 
@@ -821,11 +844,15 @@ export const organizationSubscriptionRouter = createTRPCRouter({
 
 			const { organization, membership } = ctx;
 
-			// Only owners and admins can update seats
-			if (membership.role !== "owner" && membership.role !== "admin") {
+			// Only owners and Account Managers can update seats
+			if (
+				membership.role !== MemberRole.owner &&
+				membership.role !== MemberRole.account_manager
+			) {
 				throw new TRPCError({
 					code: "FORBIDDEN",
-					message: "Only organization owners and admins can manage billing",
+					message:
+						"Only organization owners and Account Managers can manage billing",
 				});
 			}
 

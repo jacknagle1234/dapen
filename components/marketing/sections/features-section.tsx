@@ -98,7 +98,7 @@ export function FeaturesSection() {
 			description:
 				"Get access to easy-to-use tools, practical guides, and resources that help you improve your website accessibility step by step.",
 			link: "/auth/sign-up",
-			linkText: "Get started free",
+			linkText: "Purchase Protection",
 			color: "blue",
 			placement: "bottom",
 			image: {

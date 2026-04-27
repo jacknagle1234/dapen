@@ -21,7 +21,7 @@ export function isOrganizationAdmin(
 			(member) => member.userId === user.id,
 		)?.role;
 
-		return ["owner", "admin"].includes(userOrganizationRole ?? "");
+		return ["owner", "account_manager"].includes(userOrganizationRole ?? "");
 	}
 
 	return false;

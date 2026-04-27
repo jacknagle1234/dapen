@@ -12,6 +12,11 @@ import {
 import { and, eq } from "drizzle-orm";
 import { appConfig } from "@/config/app.config";
 import { authConfig } from "@/config/auth.config";
+import {
+	organizationAc,
+	organizationPluginRoles,
+} from "@/lib/auth/organization-access";
+import { enforceOwnerCannotMutateAccountManager } from "@/lib/auth/organization-owner-account-manager-guard";
 import { getOrganizationPlanLimits } from "@/lib/billing/guards";
 import { syncOrganizationSeats } from "@/lib/billing/seat-sync";
 import { db, userTable } from "@/lib/db";
@@ -25,6 +30,7 @@ import {
 } from "@/lib/email";
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logger";
+import { claimContactImportIfOwner } from "@/lib/organizations/claim-contact-on-owner-join";
 import { getBaseUrl } from "@/lib/utils";
 
 const appUrl = getBaseUrl();
@@ -145,6 +151,8 @@ export const auth = betterAuth({
 				]
 			: []),
 		organization({
+			ac: organizationAc,
+			roles: organizationPluginRoles,
 			sendInvitationEmail: async (
 				{ email, inviter, id, organization },
 				_request,
@@ -207,10 +215,12 @@ export const auth = betterAuth({
 					inviteLink: url.toString(),
 				});
 			},
+			// Owner vs Account Manager guard: `enforceOwnerCannotMutateAccountManager` in global
+			// `hooks.before` (Better Auth member hooks do not receive the acting session user).
 			// Organization hooks for seat-based billing synchronization
 			organizationHooks: {
 				// Sync seats after a member is added (via direct add or invitation acceptance)
-				afterAddMember: async ({ organization }) => {
+				afterAddMember: async ({ organization, member }) => {
 					try {
 						await syncOrganizationSeats(organization.id);
 						logger.info("Synced seats after member added", {
@@ -224,6 +234,11 @@ export const auth = betterAuth({
 							error: error instanceof Error ? error.message : "Unknown error",
 						});
 					}
+
+					await claimContactImportIfOwner({
+						organizationId: organization.id,
+						memberRole: member?.role,
+					});
 				},
 				// Sync seats after a member is removed
 				afterRemoveMember: async ({ organization }) => {
@@ -242,7 +257,7 @@ export const auth = betterAuth({
 					}
 				},
 				// Sync seats after invitation is accepted (member joins)
-				afterAcceptInvitation: async ({ organization }) => {
+				afterAcceptInvitation: async ({ organization, member, invitation }) => {
 					try {
 						await syncOrganizationSeats(organization.id);
 						logger.info("Synced seats after invitation accepted", {
@@ -254,6 +269,12 @@ export const auth = betterAuth({
 							error: error instanceof Error ? error.message : "Unknown error",
 						});
 					}
+
+					await claimContactImportIfOwner({
+						organizationId: organization.id,
+						memberRole: member?.role,
+						invitationRole: invitation?.role,
+					});
 				},
 			},
 		}),
@@ -314,6 +335,8 @@ export const auth = betterAuth({
 	},
 	hooks: {
 		before: createAuthMiddleware(async (ctx) => {
+			await enforceOwnerCannotMutateAccountManager(ctx);
+
 			if (ctx.path === "/sign-up/email" || ctx.path === "/sign-in/email") {
 				// Check if user is banned when signing in
 				if (ctx.path === "/sign-in/email") {

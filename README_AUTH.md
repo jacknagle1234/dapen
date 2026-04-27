@@ -86,31 +86,42 @@ Global platform-level permissions stored on the `user` table.
 
 Per-organization permissions stored on the `member` table.
 
-| Role     | Description                                |
-| -------- | ------------------------------------------ |
-| `owner`  | Full control (creator of the organization) |
-| `admin`  | Can manage members, settings, billing      |
-| `member` | Standard access to organization features   |
+| Role               | Description                                                                 |
+| ------------------ | ----------------------------------------------------------------------------- |
+| `owner`            | Full control (creator of the organization)                                    |
+| `account_manager`  | Same Better Auth org permissions as `owner` (members, settings, billing, invites) |
+| `member`           | Standard access to organization features                                    |
 
 **Permission Matrix:**
 
-| Action                      | Owner | Admin | Member |
-| --------------------------- | :---: | :---: | :----: |
-| View organization dashboard |  ✅   |  ✅   |   ✅   |
-| Create/edit data            |  ✅   |  ✅   |   ✅   |
-| Invite members              |  ✅   |  ✅   |   ❌   |
-| Remove members              |  ✅   |  ✅   |   ❌   |
-| Change member roles         |  ✅   |  ✅   |   ❌   |
-| Edit organization settings  |  ✅   |  ✅   |   ❌   |
-| Manage billing              |  ✅   |  ✅   |   ❌   |
-| Delete organization         |  ✅   |  ❌   |   ❌   |
-| Transfer ownership          |  ✅   |  ❌   |   ❌   |
+| Action                      | Owner | Account Manager | Member |
+| --------------------------- | :---: | :-------------: | :----: |
+| View organization dashboard |  ✅   |       ✅        |   ✅   |
+| Create/edit data            |  ✅   |       ✅        |   ✅   |
+| Invite members              |  ✅   |       ✅        |   ❌   |
+| Remove members              |  ✅   |       ✅        |   ❌   |
+| Change member roles         |  ✅   |       ✅        |   ❌   |
+| Edit organization settings  |  ✅   |       ✅        |   ❌   |
+| Manage billing              |  ✅   |       ✅        |   ❌   |
+| Delete organization         |  ✅   |       ❌        |   ❌   |
+| Transfer ownership          |  ✅   |       ❌        |   ❌   |
+
+**Owner vs Account Manager (CRM):**
+
+- An **organization owner** who does **not** also have the `account_manager` role (typical customer org owner) **cannot remove** an Account Manager or **change their role** away from `account_manager`. This is enforced server-side on Better Auth org member APIs (see `enforceOwnerCannotMutateAccountManager` in `lib/auth/organization-owner-account-manager-guard.ts`, invoked from `hooks.before` in `lib/auth/index.ts`), and mirrored in the organization members table UI.
+- Users with **`account_manager`** (and platform `user.role === "admin"`) retain normal member-management capabilities, including over `owner` rows, subject to Better Auth rules (for example, last owner).
 
 **Important Notes:**
 
-- Platform admin ≠ Organization admin (separate systems)
+- Platform `admin` (`user.role`) ≠ organization roles (separate systems)
 - Users can have different roles in different organizations
 - Creating an organization makes you the owner
+
+**Verification (manual smoke):**
+
+- Create an organization from admin CRM contacts: your `member.role` should be `account_manager`; **Invite owner** to that org should succeed.
+- As org **owner** (without `account_manager`), you cannot remove or demote an Account Manager; as **Account Manager**, you can change or remove **owner** members where Better Auth allows it (for example, not the sole owner).
+- Platform admins can still manage organization members (bypass).
 
 ---
 

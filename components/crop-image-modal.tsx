@@ -27,13 +27,17 @@ export const CropImageModal = NiceModal.create<CropImageModalProps>(
 		const getCroppedImage = async () => {
 			const cropper = cropperRef.current?.cropper;
 
+			const croppedCanvas = cropper?.getCroppedCanvas({
+				maxWidth: 256,
+				maxHeight: 256,
+			});
+
 			const imageBlob = await new Promise<Blob | null>((resolve) => {
-				cropper
-					?.getCroppedCanvas({
-						maxWidth: 256,
-						maxHeight: 256,
-					})
-					.toBlob(resolve);
+				if (!croppedCanvas) {
+					resolve(null);
+					return;
+				}
+				croppedCanvas.toBlob(resolve);
 			});
 
 			return imageBlob;

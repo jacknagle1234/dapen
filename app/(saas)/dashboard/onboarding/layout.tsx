@@ -13,7 +13,7 @@ export default function OnboardingLayout({
 			<main className="isolate min-h-screen overflow-clip">
 				<div className="mx-auto flex w-full min-w-[320px] max-w-md flex-col items-center gap-8 pt-8 pb-24 px-6 sm:pt-12 sm:pb-32">
 					<Link href="/" className="inline-flex">
-						<Logo className="h-10 w-auto" />
+						<Logo className="h-12 w-auto" />
 					</Link>
 					<div className="w-full space-y-8">{children}</div>
 				</div>

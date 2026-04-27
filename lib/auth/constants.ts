@@ -13,7 +13,9 @@ export const CAPTCHA_RESPONSE_HEADER = "x-captcha-response";
 export const organizationMemberRoleLabels = {
 	member: "Member",
 	owner: "Owner",
-	admin: "Admin",
+	account_manager: "Account Manager",
+	/** Legacy DB value pre-migration; same privilege tier as Account Manager in Better Auth. */
+	admin: "Account Manager",
 } as const satisfies Record<OrganizationMemberRole, string>;
 
 /**

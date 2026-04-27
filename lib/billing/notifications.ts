@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, or, sql } from "drizzle-orm";
 import { appConfig } from "@/config/app.config";
 import { db } from "@/lib/db";
 import { memberTable, organizationTable, userTable } from "@/lib/db/schema";
@@ -16,14 +16,12 @@ import { LoggerFactory } from "@/lib/logger/factory";
 const logger = LoggerFactory.getLogger("billing-notifications");
 
 /**
- * Get organization admins (owners and admins) with their email addresses
+ * Get organization owners and Account Managers with their email addresses
  * Optimized to filter in SQL instead of fetching all members
  */
 async function getOrganizationAdmins(
 	organizationId: string,
 ): Promise<Array<{ email: string; name: string }>> {
-	const adminRoles = [MemberRole.owner, MemberRole.admin];
-
 	const members = await db
 		.select({
 			email: userTable.email,
@@ -34,7 +32,13 @@ async function getOrganizationAdmins(
 		.where(
 			and(
 				eq(memberTable.organizationId, organizationId),
-				inArray(memberTable.role, adminRoles),
+				or(
+					inArray(memberTable.role, [
+						MemberRole.owner,
+						MemberRole.account_manager,
+					]),
+					sql`${memberTable.role} = 'admin'`,
+				),
 			),
 		);
 
@@ -55,7 +59,7 @@ async function getOrganizationName(
 }
 
 /**
- * Send payment failed notification to all organization admins
+ * Send payment failed notification to owners and Account Managers
  */
 export async function sendPaymentFailedNotification(params: {
 	organizationId: string;
@@ -78,7 +82,9 @@ export async function sendPaymentFailedNotification(params: {
 		// Get all admins
 		const admins = await getOrganizationAdmins(organizationId);
 		if (admins.length === 0) {
-			logger.warn("No admins found for organization", { organizationId });
+			logger.warn("No owners or Account Managers found for organization", {
+				organizationId,
+			});
 			return;
 		}
 
@@ -120,7 +126,7 @@ export async function sendPaymentFailedNotification(params: {
 }
 
 /**
- * Send subscription canceled notification to all organization admins
+ * Send subscription canceled notification to owners and Account Managers
  */
 export async function sendSubscriptionCanceledNotification(params: {
 	organizationId: string;
@@ -144,7 +150,9 @@ export async function sendSubscriptionCanceledNotification(params: {
 		// Get all admins
 		const admins = await getOrganizationAdmins(organizationId);
 		if (admins.length === 0) {
-			logger.warn("No admins found for organization", { organizationId });
+			logger.warn("No owners or Account Managers found for organization", {
+				organizationId,
+			});
 			return;
 		}
 
@@ -188,7 +196,7 @@ export async function sendSubscriptionCanceledNotification(params: {
 }
 
 /**
- * Send trial ending soon notification to all organization admins
+ * Send trial ending soon notification to owners and Account Managers
  */
 export async function sendTrialEndingSoonNotification(params: {
 	organizationId: string;
@@ -212,7 +220,9 @@ export async function sendTrialEndingSoonNotification(params: {
 		// Get all admins
 		const admins = await getOrganizationAdmins(organizationId);
 		if (admins.length === 0) {
-			logger.warn("No admins found for organization", { organizationId });
+			logger.warn("No owners or Account Managers found for organization", {
+				organizationId,
+			});
 			return;
 		}
 
@@ -256,7 +266,7 @@ export async function sendTrialEndingSoonNotification(params: {
 }
 
 /**
- * Send dispute/chargeback notification to all organization admins
+ * Send dispute/chargeback notification to owners and Account Managers
  * Disputes require immediate attention as they can result in fund loss
  */
 export async function sendDisputeNotification(params: {
@@ -283,7 +293,9 @@ export async function sendDisputeNotification(params: {
 		// Get all admins
 		const admins = await getOrganizationAdmins(organizationId);
 		if (admins.length === 0) {
-			logger.warn("No admins found for organization", { organizationId });
+			logger.warn("No owners or Account Managers found for organization", {
+				organizationId,
+			});
 			return;
 		}
 

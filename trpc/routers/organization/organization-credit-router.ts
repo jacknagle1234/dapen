@@ -84,11 +84,12 @@ export const organizationCreditRouter = createTRPCRouter({
 			// Only admins can purchase
 			if (
 				membership.role !== MemberRole.owner &&
-				membership.role !== MemberRole.admin
+				membership.role !== MemberRole.account_manager
 			) {
 				throw new TRPCError({
 					code: "FORBIDDEN",
-					message: "Only organization admins can purchase credits",
+					message:
+						"Only organization owners and Account Managers can purchase credits",
 				});
 			}
 

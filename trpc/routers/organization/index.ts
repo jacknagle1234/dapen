@@ -1,7 +1,5 @@
-import slugify from "@sindresorhus/slugify";
 import { TRPCError } from "@trpc/server";
 import { asc, eq, getTableColumns } from "drizzle-orm";
-import { nanoid } from "nanoid";
 import { headers } from "next/headers";
 import { appConfig } from "@/config/app.config";
 import { auth } from "@/lib/auth";
@@ -9,6 +7,7 @@ import { assertUserIsOrgMember } from "@/lib/auth/server";
 import { db, memberTable, organizationTable } from "@/lib/db";
 import { creditBalanceTable } from "@/lib/db/schema";
 import { logger } from "@/lib/logger";
+import { generateOrganizationSlug } from "@/lib/organizations/generate-organization-slug";
 import {
 	createOrganizationSchema,
 	getOrganizationByIdSchema,
@@ -18,37 +17,6 @@ import { organizationAiRouter } from "@/trpc/routers/organization/organization-a
 import { organizationCreditRouter } from "@/trpc/routers/organization/organization-credit-router";
 import { organizationLeadRouter } from "@/trpc/routers/organization/organization-lead-router";
 import { organizationSubscriptionRouter } from "@/trpc/routers/organization/organization-subscription-router";
-
-async function generateOrganizationSlug(name: string): Promise<string> {
-	const baseSlug = slugify(name, {
-		lowercase: true,
-	});
-
-	let slug = baseSlug;
-	let hasAvailableSlug = false;
-
-	for (let i = 0; i < 3; i++) {
-		slug = `${baseSlug}-${nanoid(5)}`;
-
-		const existing = await db.query.organizationTable.findFirst({
-			where: (org, { eq }) => eq(org.slug, slug),
-		});
-
-		if (!existing) {
-			hasAvailableSlug = true;
-			break;
-		}
-	}
-
-	if (!hasAvailableSlug) {
-		throw new TRPCError({
-			code: "BAD_REQUEST",
-			message: "No available slug found",
-		});
-	}
-
-	return slug;
-}
 
 export const organizationRouter = createTRPCRouter({
 	list: protectedProcedure.query(async ({ ctx }) => {

@@ -29,6 +29,10 @@ import { UserAvatar } from "@/components/user/user-avatar";
 import { useSession } from "@/hooks/use-session";
 import { authClient } from "@/lib/auth/client";
 import { organizationMemberRoleLabels } from "@/lib/auth/constants";
+import {
+	isCustomerOwnerOnlyActor,
+	isOrgRoleAccountManagerOrLegacyAdmin,
+} from "@/lib/auth/organization-member-role-utils";
 import { isOrganizationAdmin } from "@/lib/auth/utils";
 import { trpc } from "@/trpc/client";
 import type { OrganizationMemberRole } from "@/types/organization-member-role";
@@ -51,6 +55,10 @@ export function OrganizationMembersTable({
 	);
 
 	const userIsOrganizationAdmin = isOrganizationAdmin(organization, user);
+
+	const myOrgMemberRole =
+		organization?.members.find((m) => m.userId === user?.id)?.role ?? "";
+	const actorIsCustomerOwnerOnly = isCustomerOwnerOnlyActor(myOrgMemberRole);
 
 	const updateMemberRole = (memberId: string, role: OrganizationMemberRole) => {
 		toast.promise(
@@ -121,13 +129,27 @@ export function OrganizationMembersTable({
 			accessorKey: "actions",
 			header: "",
 			cell: ({ row }) => {
+				const blockOwnerVsAccountManager =
+					actorIsCustomerOwnerOnly &&
+					isOrgRoleAccountManagerOrLegacyAdmin(row.original.role);
+
 				return (
 					<div className="flex flex-row justify-end gap-2">
 						{userIsOrganizationAdmin ? (
 							<>
 								<OrganizationRoleSelect
 									disabled={
-										!userIsOrganizationAdmin || row.original.role === "owner"
+										!userIsOrganizationAdmin ||
+										row.original.role === "owner" ||
+										blockOwnerVsAccountManager
+									}
+									hiddenRoles={
+										row.original.role
+											.split(",")
+											.map((r) => r.trim())
+											.includes("admin")
+											? []
+											: ["admin"]
 									}
 									onSelect={async (value) =>
 										updateMemberRole(row.original.id, value)
@@ -151,7 +173,10 @@ export function OrganizationMembersTable({
 										{row.original.userId !== user?.id && (
 											<DropdownMenuItem
 												className="text-destructive"
-												disabled={!isOrganizationAdmin(organization, user)}
+												disabled={
+													!isOrganizationAdmin(organization, user) ||
+													blockOwnerVsAccountManager
+												}
 												onClick={async () => removeMember(row.original.id)}
 											>
 												Remove member

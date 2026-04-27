@@ -185,7 +185,7 @@ export function AboutSection() {
 								"dark:bg-marketing-accent",
 							)}
 						>
-							Get started free
+							Purchase Protection
 						</Link>
 						<Link
 							href="/contact"

@@ -12,7 +12,7 @@ export const InvitationStatuses = Object.values(InvitationStatus);
 // Member role enum
 export const MemberRole = {
 	owner: "owner",
-	admin: "admin",
+	account_manager: "account_manager",
 	member: "member",
 } as const;
 export type MemberRole = (typeof MemberRole)[keyof typeof MemberRole];

@@ -2,6 +2,7 @@
 
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
+import { MARKETING_MAIN_MAX_WIDTH_CLASS } from "@/lib/marketing/marketing-content-width";
 import { cn } from "@/lib/utils";
 
 interface CtaContent {
@@ -19,17 +20,25 @@ interface CtaContent {
 
 interface CtaSectionProps {
 	centered?: boolean;
+	className?: string;
+	headingClassName?: string;
 	content: CtaContent;
 }
 
-export function CtaSection({ centered = false, content }: CtaSectionProps) {
+export function CtaSection({
+	centered = false,
+	className,
+	headingClassName,
+	content,
+}: CtaSectionProps) {
 	const { headline, description, primaryCta, secondaryCta } = content;
 
 	return (
-		<section id="cta" className="py-16">
+		<section id="cta" className={cn("py-16", className)}>
 			<div
 				className={cn(
-					"mx-auto flex max-w-2xl flex-col gap-10 px-6 md:max-w-3xl lg:max-w-7xl lg:px-10",
+					"flex flex-col gap-10",
+					MARKETING_MAIN_MAX_WIDTH_CLASS,
 					centered && "items-center text-center",
 				)}
 			>
@@ -43,9 +52,9 @@ export function CtaSection({ centered = false, content }: CtaSectionProps) {
 					>
 						<h2
 							className={cn(
-								"text-pretty font-display text-[2rem] leading-10 tracking-tight",
-								"text-marketing-fg",
-								"sm:text-5xl sm:leading-14",
+								"text-pretty text-marketing-fg",
+								headingClassName ??
+									"font-display text-[2rem] leading-10 tracking-tight sm:text-5xl sm:leading-14",
 							)}
 						>
 							{headline}
@@ -59,7 +68,7 @@ export function CtaSection({ centered = false, content }: CtaSectionProps) {
 				{/* Buttons */}
 				<div
 					className={cn(
-						"flex items-center gap-4",
+						"flex flex-wrap items-center gap-4",
 						centered && "justify-center",
 					)}
 				>

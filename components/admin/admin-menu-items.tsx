@@ -1,6 +1,11 @@
 "use client";
 
-import { Building2Icon, FileCog2Icon, UsersIcon } from "lucide-react";
+import {
+	Building2Icon,
+	FileCog2Icon,
+	MailPlusIcon,
+	UsersIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type * as React from "react";
@@ -33,6 +38,11 @@ export function AdminMenuItems(): React.JSX.Element {
 			label: "Management",
 			items: [
 				{
+					label: "Contacts",
+					href: "/dashboard/admin/contacts",
+					icon: MailPlusIcon,
+				},
+				{
 					label: "Users",
 					href: "/dashboard/admin/users",
 					icon: UsersIcon,
@@ -42,7 +52,6 @@ export function AdminMenuItems(): React.JSX.Element {
 					href: "/dashboard/admin/organizations",
 					icon: Building2Icon,
 				},
-
 				{
 					label: "App Config",
 					href: "/dashboard/admin/app-config",

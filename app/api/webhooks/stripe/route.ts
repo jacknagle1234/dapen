@@ -976,7 +976,7 @@ async function handleInvoicePaymentFailed(
 		currency: invoice.currency,
 	});
 
-	// Send notification email to organization admins about failed payment
+	// Send notification email to owners and Account Managers about failed payment
 	if (organizationId) {
 		await sendPaymentFailedNotification({
 			organizationId,

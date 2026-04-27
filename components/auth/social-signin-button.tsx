@@ -21,7 +21,7 @@ export function SocialSigninButton({
 	const providerData = oAuthProviders[provider];
 
 	const redirectPath = invitationId
-		? `/app/organization-invitation/${invitationId}`
+		? `/dashboard/organization-invitation/${invitationId}`
 		: authConfig.redirectAfterSignIn;
 
 	const onSignin = () => {

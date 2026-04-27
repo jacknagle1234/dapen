@@ -84,7 +84,7 @@ export function Header() {
 					{/* Logo - Left */}
 					<div className="flex items-center">
 						<Link href="/" className="inline-flex items-stretch">
-							<Logo className="h-5 w-auto md:h-6" />
+							<Logo className="h-7 w-auto md:h-8" />
 						</Link>
 					</div>
 
@@ -179,7 +179,7 @@ export function Header() {
 											"bg-marketing-accent text-marketing-accent-fg hover:bg-marketing-accent-hover transition-colors",
 										)}
 									>
-										Get started free
+										Purchase Protection
 									</Link>
 								</div>
 							) : null}
@@ -236,7 +236,7 @@ export function Header() {
 											onClick={() => setMenuOpen(false)}
 											className="w-full rounded-full bg-marketing-accent py-4 text-center text-xl font-medium text-marketing-accent-fg transition-colors hover:bg-marketing-accent-hover"
 										>
-											Get started free
+											Purchase Protection
 										</Link>
 									</div>
 								) : null}

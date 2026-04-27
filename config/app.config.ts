@@ -2,7 +2,7 @@ import { getBaseUrl } from "@/lib/utils";
 
 export const appConfig = {
 	appName: "DAPEN.org",
-	description: `Our mission is to provide free education to help businesses improve website accessibility.`,
+	description: `Protecting businesses from the most common website lawsuit.`,
 	baseUrl: getBaseUrl(),
 	// Contact information (displayed on contact page)
 	contact: {

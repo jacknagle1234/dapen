@@ -14,7 +14,7 @@ export function Logo({ className }: LogoProps): React.JSX.Element {
 			alt={appConfig.appName}
 			width={1262}
 			height={219}
-			className={cn("h-6 w-auto md:h-7", className)}
+			className={cn("h-8 w-auto md:h-10", className)}
 			priority
 		/>
 	);

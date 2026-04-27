@@ -15,19 +15,23 @@ export type OrganizationRoleSelectProps = {
 	value: OrganizationMemberRole;
 	onSelect: (value: OrganizationMemberRole) => void;
 	disabled?: boolean;
+	/** Role values to omit from the list (defaults to hiding legacy org `admin`). */
+	hiddenRoles?: readonly OrganizationMemberRole[];
 };
 
 export function OrganizationRoleSelect({
 	value,
 	onSelect,
 	disabled,
+	hiddenRoles = ["admin"],
 }: OrganizationRoleSelectProps): React.JSX.Element {
-	const roleOptions = Object.entries(organizationMemberRoleLabels).map(
-		([v, label]) => ({
+	const hidden = new Set(hiddenRoles);
+	const roleOptions = Object.entries(organizationMemberRoleLabels)
+		.filter(([v]) => !hidden.has(v as OrganizationMemberRole))
+		.map(([v, label]) => ({
 			value: v,
 			label,
-		}),
-	);
+		}));
 
 	return (
 		<Select disabled={disabled} onValueChange={onSelect} value={value}>
